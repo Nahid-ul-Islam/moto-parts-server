@@ -37,7 +37,7 @@ async function run() {
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const singlePart = await partsCollection.findOne(query);
-            res.send(query);
+            res.send(singlePart);
         });
 
 

@@ -22,8 +22,13 @@ async function run() {
         console.log('db connected');
         const partsCollection = client.db("moto-parts").collection("parts");
         const reviewCollection = client.db("moto-parts").collection("reviews"); 
+        const orderCollection = client.db("moto-parts").collection("orders"); 
         
-
+        
+        /*-------------------
+        parts Api start
+        -------------------*/
+        
         //load parts
         app.get('/parts', async(req, res) => {
             const query = {};
@@ -40,12 +45,61 @@ async function run() {
             res.send(singlePart);
         });
 
+        //update availableQuantity of prarts
+        app.put('/parts/:id', async(req, res) =>{
+            const id = req.params.id;
+            const updatedQuantity = req.body;
+            // console.log(updatedQuantity);
+            const filter = {_id: ObjectId(id)};
+            const options = {upsert: true};
+            const updateDoc = {
+                $set: {
+                    availableQuantity: updatedQuantity.newQuantity
+                }
+            };
+            const result = await partsCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
 
+        /*-------------------
+        parts Api end
+        -------------------*/
+        
+
+
+        
+        /*-------------------
+        review Api start
+        -------------------*/
+        
         //load reviews
         app.get('/reviews', async(req, res) => {
             const reviews = await reviewCollection.find().toArray();
             res.send(reviews); 
         });
+
+        /*-------------------
+        review Api end
+        -------------------*/
+        
+
+        
+        /*-------------------
+        order Api start
+        -------------------*/
+        
+        //post newOrder
+        app.post('/order', async(req, res) => {
+            const newOrder = req.body;
+            console.log('adding new order', newOrder);
+            const result = await orderCollection.insertOne(newOrder);
+            res.send(result);
+        });
+
+        /*-------------------
+        review Api end
+        -------------------*/
+        
 
     }
     finally{

@@ -105,6 +105,12 @@ async function run() {
             res.send(result);
         });
 
+        //get all order
+        app.get('/order', async(req, res) => {
+            const allOrder = await orderCollection.find().toArray();
+            res.send(allOrder);
+        });
+
         //get myOrders
         app.get('/my-order', async(req, res) => {
             const email = req.query.email;
@@ -132,6 +138,14 @@ async function run() {
         /*-------------------
         user Api start
         -------------------*/
+
+        //get user
+        app.get('/user/:email', async(req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            res.send(user);
+        });
 
         //put user
         app.put('/user/:email', async (req, res) => {

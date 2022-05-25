@@ -23,6 +23,7 @@ async function run() {
         const partsCollection = client.db("moto-parts").collection("parts");
         const reviewCollection = client.db("moto-parts").collection("reviews"); 
         const orderCollection = client.db("moto-parts").collection("orders"); 
+        const userCollection = client.db("moto-parts").collection("user"); 
         
         
         /*-------------------
@@ -124,6 +125,30 @@ async function run() {
 
         /*-------------------
         order Api end
+        -------------------*/
+
+
+
+        /*-------------------
+        user Api start
+        -------------------*/
+
+        //put user
+        app.put('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: user,
+            };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+
+        /*-------------------
+        user Api end
         -------------------*/
         
 

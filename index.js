@@ -78,6 +78,14 @@ async function run() {
             res.send(reviews); 
         });
 
+        //add a new review
+        app.post('/reviews', async(req, res) => {
+            const newReview = req.body;
+            console.log('adding a new review', newReview);
+            const result = await reviewCollection.insertOne(newReview);
+            res.send(result);
+        });
+
         /*-------------------
         review Api end
         -------------------*/
@@ -91,7 +99,7 @@ async function run() {
         //post newOrder
         app.post('/order', async(req, res) => {
             const newOrder = req.body;
-            console.log('adding new order', newOrder);
+            console.log('adding a new order', newOrder);
             const result = await orderCollection.insertOne(newOrder);
             res.send(result);
         });

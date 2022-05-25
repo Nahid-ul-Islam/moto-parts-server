@@ -96,8 +96,26 @@ async function run() {
             res.send(result);
         });
 
+        //get myOrders
+        app.get('/my-order', async(req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const myOrder = await orderCollection.find(query).toArray();
+            res.send(myOrder);
+        });
+
+        //delete one of myOrder
+        app.delete('/my-order/:id', async(req, res) => {
+            const id = req.params.id;
+            console.log('deleting - id: ', id);
+            const query = { _id: ObjectId(id) };
+            console.log(query,'query');
+            const result = await orderCollection.deleteOne(query);
+            res.send(result);
+        });
+
         /*-------------------
-        review Api end
+        order Api end
         -------------------*/
         
 

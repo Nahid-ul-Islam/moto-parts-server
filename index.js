@@ -51,7 +51,10 @@ async function run() {
 
         const verifyAdmin = async (req, res, next) => {
             const requester = req.decoded.email;
+            //console.log('requester', requester);
             const requesterAccount = await userCollection.findOne({ email: requester });
+            //console.log('requesterAccount', requesterAccount);
+            //console.log('requesterAccount.role', requesterAccount.role);
             if (requesterAccount.role === 'admin') {
                 next();
             }
@@ -83,7 +86,7 @@ async function run() {
         });
 
         //add a new parts
-        app.post('/parts', verifyJWT, async (req, res) => {
+        app.post('/parts', verifyJWT, verifyAdmin, async (req, res) => {
             const newParts = req.body;
             console.log('adding a new parts', newParts);
             const result = await partsCollection.insertOne(newParts);
@@ -91,7 +94,7 @@ async function run() {
         });
 
         //update availableQuantity of prarts
-        app.put('/parts/:id', async (req, res) => {
+        app.put('/parts/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const updatedQuantity = req.body;
             // console.log(updatedQuantity);
@@ -216,7 +219,7 @@ async function run() {
         });
 
         //put user
-        app.put('/user/:email', async (req, res) => {
+        app.put('/user/:email', verifyJWT, verifyAdmin, async (req, res) => {
             const email = req.params.email;
             const user = req.body;
             const filter = { email: email };

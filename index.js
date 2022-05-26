@@ -70,7 +70,7 @@ async function run() {
         -------------------*/
 
         //load parts
-        app.get('/parts', verifyJWT, async (req, res) => {
+        app.get('/parts', async (req, res) => {
             const query = {};
             const cursor = partsCollection.find(query);
             const parts = await cursor.toArray();

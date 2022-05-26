@@ -46,6 +46,14 @@ async function run() {
             res.send(singlePart);
         });
 
+        //add a new parts
+        app.post('/parts', async(req, res) => {
+            const newParts = req.body;
+            console.log('adding a new parts', newParts);
+            const result = await partsCollection.insertOne(newParts);
+            res.send(result);
+        });
+
         //update availableQuantity of prarts
         app.put('/parts/:id', async(req, res) =>{
             const id = req.params.id;

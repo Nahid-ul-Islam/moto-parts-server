@@ -62,6 +62,16 @@ async function run() {
             res.send(result);
         });
 
+        //delete one of the parts
+        app.delete('/parts/:id', async(req, res) => {
+            const id = req.params.id;
+            console.log('deleting - id: ', id);
+            const query = { _id: ObjectId(id) };
+            console.log(query,'query');
+            const result = await partsCollection.deleteOne(query);
+            res.send(result);
+        });
+
         /*-------------------
         parts Api end
         -------------------*/

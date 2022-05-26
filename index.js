@@ -21,7 +21,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 //jwt
 function verifyJWT(req, res, next) {
     // console.log('abc');
-    const authHeader = req.headers.authorization;
+    console.log(req.headers)
+    const authHeader = req?.headers?.authorization;
     if (!authHeader) {
         return res.status(401).send({ message: 'UnAuthorized access' });
     }
@@ -50,12 +51,13 @@ async function run() {
         //admin
 
         const verifyAdmin = async (req, res, next) => {
-            const requester = req.decoded.email;
+            console.log(req)
+            const requester = req?.decoded?.email || req.body.email;
             //console.log('requester', requester);
             const requesterAccount = await userCollection.findOne({ email: requester });
-            //console.log('requesterAccount', requesterAccount);
+            console.log('requesterAccount', requesterAccount);
             //console.log('requesterAccount.role', requesterAccount.role);
-            if (requesterAccount.role === 'admin') {
+            if (requesterAccount?.role === 'admin') {
                 next();
             }
             else {
@@ -219,7 +221,7 @@ async function run() {
         });
 
         //put user
-        app.put('/user/:email', verifyJWT, verifyAdmin, async (req, res) => {
+        app.put('/user/:email', async (req, res) => {
             const email = req.params.email;
             const user = req.body;
             const filter = { email: email };
